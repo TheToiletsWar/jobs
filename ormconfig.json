@@ -1,0 +1,13 @@
+{
+  "type": "mysql",
+  "host": "10.128.231.60",
+  "port": 31839,
+  "username": "root",
+  "password": "Zpmc@3261",
+  "database": "test",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["src/entitys/**/*.ts"],
+  "migrations": ["src/migration/**/*.ts"],
+  "subscribers": ["src/subscriber/**/*.ts"]
+}
