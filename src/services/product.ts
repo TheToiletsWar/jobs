@@ -41,15 +41,15 @@ export default async function startCronJob() {
     switch (crane.device_type) {
       case '桥吊':
         tagNames.push(
-          `PSA.${crane.cranevalue}.${qcNosPrefix}`,
-          `PSA.${crane.cranevalue}.${qcTeuPrefix}`,
+          `NingBo.${crane.cranevalue}.${qcNosPrefix}`,
+          `NingBo.${crane.cranevalue}.${qcTeuPrefix}`,
         );
         break;
 
       case '龙门吊':
         tagNames.push(
-          `PSA.${crane.cranevalue}.${rtgNosPrefix}`,
-          `PSA.${crane.cranevalue}.${rtgTeuPrefix}`,
+          `NingBo.${crane.cranevalue}.${rtgNosPrefix}`,
+          `NingBo.${crane.cranevalue}.${rtgTeuPrefix}`,
         );
         break;
     }
