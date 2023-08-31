@@ -1,6 +1,6 @@
+import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { EquipWorkByHourEntity } from '../entities/equip.workbyhour.entity';
-import 'reflect-metadata';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   username: 'root',
   password: 'Zpmc@3261',
   database: 'order_server',
-  entities: [__dirname + '/entity/*{.js,.ts}'],
-  synchronize: true,
-  logging: false,
+  entities: ['src/entities/*.entity{.js,.ts}'],
+  synchronize: false,
+  logging: true,
 });

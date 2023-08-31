@@ -3,32 +3,66 @@ import Logger from '../common/log';
 import { readTags, setTagValues } from '../common/ziRestful';
 import { EquipWorkByHourEntity } from '../entities/equip.workbyhour.entity';
 import { AppDataSource } from '../common';
+import { DevicesListEntity } from '../entities/devices.list.entity';
+import { Like } from 'typeorm';
+import { WorkByHourDto } from '../dto/workbyhour.dto';
+import { WriteTagDto } from '../dto/write.tag.dto';
 
 export default async function startCronJob() {
   console.log('script start :>> ');
-  const data = await AppDataSource.createQueryBuilder()
-    .select('workbyhour.equip_id', 'craneId')
-    .from(EquipWorkByHourEntity, 'workbyhour')
+  await AppDataSource.initialize();
+  const entityManager = AppDataSource.createEntityManager();
+  const workByHourData =  (
+    await entityManager
+      .createQueryBuilder()
+      .select('workbyhour.equip_id', 'equipId')
+      .addSelect('SUM(workbyhour.nosCount)', 'nosCount')
+      .addSelect('SUM(workbyhour.teuCount)', 'teuCount')
+      .from(EquipWorkByHourEntity, 'workbyhour')
+      .where('workbyhour.equipId LIKE :cr', { cr: 'CR%' })
+      .orWhere('workbyhour.equipId LIKE :rt', { rt: 'RT%' })
+      .groupBy('workbyhour.equip_id')
+      .getRawMany()
+  ).map((rawData) => new WorkByHourDto(rawData));
+  console.log('workByHourData :>> ', workByHourData.length);
+  const cranes = await entityManager
+    .createQueryBuilder(DevicesListEntity, 'devices')
+    .where('devices.name LIKE :cr', { cr: '%CR%' })
+    .orWhere('devices.name LIKE :rt', { rt: '%RT%' })
     .getMany();
-  console.log('data :>> ', data);
-  const flag = await setTagValues(
-    [
-      {
-        name: 'PSA.QC2201.QCOS_P_OpsMode',
-        type: 'string',
-        value: 'EO',
-      },
-    ],
-    false,
-    15000,
-    'memory-bus',
-  );
-  console.log('flag :>> ', flag);
-  // const dataset = await readTags([
-  //   "PSA.QC2201.QCOS_P_OpsMode",
-  //   "PSA.QC2201.QCOS_S_OpsMode",
-  // ]);
-  // console.log("dataset :>> ", dataset);
-  // 你的业务逻辑
-  // });
+
+  console.log('cranes :>> ', cranes.length);
+  const qcNosPrefix = 'Modified.CRNOS';
+  const qcTeuPrefix = 'Modified.CRTeu';
+  const rtgNosPrefix = 'Modified.RTNOS';
+  const rtgTeuPrefix = 'Modified.RTTeu';
+  const tagNames: string[] = [];
+  for (const crane of cranes) {
+    switch (crane.device_type) {
+      case '桥吊':
+        tagNames.push(
+          `PSA.${crane.cranevalue}.${qcNosPrefix}`,
+          `PSA.${crane.cranevalue}.${qcTeuPrefix}`,
+        );
+        break;
+
+      case '龙门吊':
+        tagNames.push(
+          `PSA.${crane.cranevalue}.${rtgNosPrefix}`,
+          `PSA.${crane.cranevalue}.${rtgTeuPrefix}`,
+        );
+        break;
+    }
+  }
+  // tagNames
+  const tagData = await readTags(tagNames);
+  const writeTag: WriteTagDto[] = [];
+  for (const tag of tagData) {
+    const splitDot = tag.name.split('.');
+    const machineryName = splitDot[1];
+    const productInfo = workByHourData.find(
+      (item) => item.equipId === machineryName,
+    );
+    const currentTeuTag = 0;
+  }
 }

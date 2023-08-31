@@ -1,13 +1,13 @@
-import axios from "axios";
-import { ItemName, ItemVal } from "../interfaces/zi.restful.interface";
-import { TagVal } from "../interfaces/api.alias.interface";
-import Logger from "../common/log";
-import { Dataset } from "../interfaces/data.interface";
+import axios from 'axios';
+import { ItemName, ItemVal } from '../interfaces/zi.restful.interface';
+import { TagVal } from '../interfaces/api.alias.interface';
+import Logger from '../common/log';
+import { Dataset } from '../interfaces/data.interface';
 
 async function itemValuesReadPut(itemNames: ItemName[]): Promise<ItemVal[]> {
   const response = await axios.put<ItemVal[]>(
-    "http://10.128.231.141:32280/v1/item/values/read",
-    itemNames
+    'http://10.128.231.60:31181/v1/item/values/read',
+    itemNames,
   );
   return response.data;
 }
@@ -27,8 +27,8 @@ function getTagValue(itemValue: ItemVal): TagVal {
 
   if (value && value.dataType) {
     const valuePropertyName = value.isArray
-      ? "arrayVal"
-      : value.dataType + "Val";
+      ? 'arrayVal'
+      : value.dataType + 'Val';
 
     Object.assign(tagVal, { type: value.dataType });
 
@@ -88,7 +88,7 @@ export async function readTags(tagNames: string[]): Promise<Dataset[]> {
         value: tagValue.value,
       };
       return dataset;
-    })
+    }),
   );
 }
 /**
@@ -108,17 +108,17 @@ function getItemNames(tagNames: string[]): ItemName[] {
  * @returns {ItemName} ItemName of api
  */
 function getItemName(tagName: string): ItemName {
-  const splitDot = tagName.split(".");
+  const splitDot = tagName.split('.');
 
   if (splitDot.length < 3) {
-    Logger.debug("Tag address error: " + tagName);
-    throw Error("Tag address error");
+    Logger.debug('Tag address error: ' + tagName);
+    throw Error('Tag address error');
   }
 
   return {
     portName: splitDot[0],
     machineryName: splitDot[1],
-    itemName: splitDot.splice(2).join("."),
+    itemName: splitDot.splice(2).join('.'),
   };
 }
 
@@ -126,7 +126,7 @@ export async function setTagValues(
   tagValues: Array<{ name: string; value: any; type?: string }>,
   sync?: boolean,
   timeout?: number,
-  target?: string
+  target?: string,
 ): Promise<string> {
   const itemValues: Array<Partial<ItemVal>> = [];
 
@@ -142,7 +142,7 @@ export async function setTagValues(
       type = await itemValueItemNameGet(
         itemName.portName,
         itemName.machineryName,
-        itemName.itemName
+        itemName.itemName,
       ).then((itemValue) => {
         if (itemValue.value) {
           return itemValue.value.dataType;
@@ -156,13 +156,13 @@ export async function setTagValues(
       value: {
         isArray: Array.isArray(value),
         dataType: type!,
-        [type + "Val"]: { value: value },
+        [type + 'Val']: { value: value },
       },
     });
   }
 
   return itemValuesWritePut(itemValues, sync, timeout, target).then(
-    () => `Write all tag successful.`
+    () => `Write all tag successful.`,
   );
 }
 
@@ -176,11 +176,11 @@ export async function setTagValues(
 async function itemValueItemNameGet(
   portName: string,
   machineryName: string,
-  itemName: string
+  itemName: string,
 ): Promise<ItemVal> {
   const response = await axios.request<ItemVal>({
-    method: "GET",
-    url: "http://10.128.231.141:32280/v1/item/value/" + itemName,
+    method: 'GET',
+    url: 'http://10.128.231.60:31181/v1/item/value/' + itemName,
     params: { portName, machineryName },
   });
   return response.data;
@@ -198,11 +198,11 @@ function itemValuesWritePut(
   itemValues: Array<Partial<ItemVal>>,
   sync?: boolean,
   timeout?: number,
-  target?: string
+  target?: string,
 ): Promise<any> {
   return axios.request({
-    method: "PUT",
-    url: "http://10.128.231.141:32280/v1/item/values/write",
+    method: 'PUT',
+    url: 'http://10.128.231.141:32280/v1/item/values/write',
     data: itemValues,
     params: { sync, timeout, target },
   });
