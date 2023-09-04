@@ -20,7 +20,7 @@
       "outputCapture": "std",
       "env": {
         "TS_NODE_TRANSPILE_ONLY": "1",
-        "NODE_ENV": ""
+        "NODE_ENV": "local"
       }
     }
   ]

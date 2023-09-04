@@ -1,13 +1,11 @@
 {
   "type": "mysql",
   "host": "10.128.231.60",
-  "port": 31839,
+  "port": 31129,
   "username": "root",
   "password": "Zpmc@3261",
-  "database": "test",
-  "synchronize": true,
-  "logging": false,
-  "entities": ["src/entitys/**/*.ts"],
-  "migrations": ["src/migration/**/*.ts"],
-  "subscribers": ["src/subscriber/**/*.ts"]
+  "database": "order_server",
+  "synchronize": false,
+  "logging": true,
+  "entities": ["src/entities/*.entity{.js,.ts}"]
 }

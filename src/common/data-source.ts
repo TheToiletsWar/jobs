@@ -1,15 +1,10 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { EquipWorkByHourEntity } from '../entities/equip.workbyhour.entity';
+import * as fs from 'fs';
+import * as path from 'path';
 
-export const AppDataSource = new DataSource({
-  type: 'mysql',
-  host: '10.128.231.60',
-  port: 31129,
-  username: 'root',
-  password: 'Zpmc@3261',
-  database: 'order_server',
-  entities: ['src/entities/*.entity{.js,.ts}'],
-  synchronize: false,
-  logging: true,
-});
+// 从配置文件中读取数据库配置
+const dbConfigPath = path.join('ormconfig.json'); // 注意这里的路径已经更改
+const dbConfig = JSON.parse(fs.readFileSync(dbConfigPath, 'utf8'));
+
+export const AppDataSource = new DataSource(dbConfig);

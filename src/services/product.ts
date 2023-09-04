@@ -11,6 +11,7 @@ import { CraneProductDto } from '../dto/crane.product.dto';
 // 初始化数据源和定时任务
 export default async function startCronJob() {
   await AppDataSource.initialize();
+  // await fetchDataAndUpdateTags();
   // 每小时执行一次
   cron.schedule('* * * * *', async () => {
     try {
@@ -112,9 +113,6 @@ async function fetchDataAndUpdateTags() {
   for (const tag of tagData) {
     const splitDot = tag.name.split('.');
     const machineryName = splitDot[1];
-    const productInfo = workByHourData.find(
-      (item) => item.equipId === machineryName,
-    );
     const crane = cranes.find((item) => item.cranevalue === machineryName);
     switch (crane?.device_type) {
       case '桥吊':
