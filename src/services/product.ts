@@ -8,8 +8,8 @@ import { WorkByHourDto } from '../dto/workbyhour.dto';
 import { WriteTagDto } from '../dto/write.tag.dto';
 import { CraneProductDto } from '../dto/crane.product.dto';
 
+
 async function fetchDataAndUpdateTags() {
-  await AppDataSource.initialize();
   const entityManager = AppDataSource.createEntityManager();
   const workByHourData = (
     await entityManager
@@ -242,11 +242,12 @@ async function fetchDataAndUpdateTags() {
 
 // 初始化数据源和定时任务
 export default async function startCronJob() {
-  await AppDataSource.initialize();
+
 
   // 每小时执行一次
-  cron.schedule('0 * * * *', async () => {
+  cron.schedule('* * * * *', async () => {
     try {
+      await AppDataSource.initialize();
       await fetchDataAndUpdateTags();
     } catch (error) {
       Logger.error(`An error occurred during the cron job,${error}`);
