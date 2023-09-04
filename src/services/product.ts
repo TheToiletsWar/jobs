@@ -2,20 +2,20 @@ import cron from 'node-cron';
 import Logger from '../common/log';
 import { readTags, setTagValues } from '../common/ziRestful';
 import { EquipWorkByHourEntity } from '../entities/equip.workbyhour.entity';
-import { AppDataSource } from '../common';
 import { DevicesListEntity } from '../entities/devices.list.entity';
 import { WorkByHourDto } from '../dto/workbyhour.dto';
 import { WriteTagDto } from '../dto/write.tag.dto';
 import { CraneProductDto } from '../dto/crane.product.dto';
+import { AppDataSource } from '../common';
 
 // 初始化数据源和定时任务
 export default async function startCronJob() {
-  await AppDataSource.initialize();
-  // await fetchDataAndUpdateTags();
+
+  await fetchDataAndUpdateTags();
   // 每小时执行一次
   cron.schedule('* * * * *', async () => {
     try {
-      await fetchDataAndUpdateTags();
+      // await fetchDataAndUpdateTags();
     } catch (error) {
       Logger.error(`An error occurred during the cron job,${error}`);
     }

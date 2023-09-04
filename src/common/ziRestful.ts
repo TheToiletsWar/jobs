@@ -6,7 +6,7 @@ import { Dataset } from '../interfaces/data.interface';
 
 async function itemValuesReadPut(itemNames: ItemName[]): Promise<ItemVal[]> {
   const response = await axios.put<ItemVal[]>(
-    'http://10.128.231.60:31080/v1/item/values/read',
+    '/item/values/read',
     itemNames,
   );
   return response.data;
@@ -180,7 +180,7 @@ async function itemValueItemNameGet(
 ): Promise<ItemVal> {
   const response = await axios.request<ItemVal>({
     method: 'GET',
-    url: 'http://10.128.231.60:31080/v1/item/value/' + itemName,
+    url: '/item/value/' + itemName,
     params: { portName, machineryName },
   });
   return response.data;
@@ -202,7 +202,7 @@ function itemValuesWritePut(
 ): Promise<any> {
   return axios.request({
     method: 'PUT',
-    url: 'http://10.128.231.60:31080/v1/item/values/write',
+    url: '/item/values/write',
     data: itemValues,
     params: { sync, timeout, target },
   });
