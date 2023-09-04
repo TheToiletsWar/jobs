@@ -8,6 +8,18 @@ import { WorkByHourDto } from '../dto/workbyhour.dto';
 import { WriteTagDto } from '../dto/write.tag.dto';
 import { CraneProductDto } from '../dto/crane.product.dto';
 
+// 初始化数据源和定时任务
+export default async function startCronJob() {
+  await AppDataSource.initialize();
+  // 每小时执行一次
+  cron.schedule('* * * * *', async () => {
+    try {
+      await fetchDataAndUpdateTags();
+    } catch (error) {
+      Logger.error(`An error occurred during the cron job,${error}`);
+    }
+  });
+}
 
 async function fetchDataAndUpdateTags() {
   const entityManager = AppDataSource.createEntityManager();
@@ -238,19 +250,4 @@ async function fetchDataAndUpdateTags() {
   // 执行写入操作
   const writeResult = await setTagValues(writeData, false, 15000, 'memory-bus');
   console.log('Write result:', writeResult);
-}
-
-// 初始化数据源和定时任务
-export default async function startCronJob() {
-
-
-  // 每小时执行一次
-  cron.schedule('* * * * *', async () => {
-    try {
-      await AppDataSource.initialize();
-      await fetchDataAndUpdateTags();
-    } catch (error) {
-      Logger.error(`An error occurred during the cron job,${error}`);
-    }
-  });
 }
