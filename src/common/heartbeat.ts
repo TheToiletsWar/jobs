@@ -7,7 +7,7 @@ class Heartbeat {
     }
 
     this.interval = setInterval(() => {
-      console.log("[HEARTBEAT] I'm alive!");
+      console.log(`Heartbeat  ${new Date().toISOString()}`);
     }, milliseconds);
   }
 
