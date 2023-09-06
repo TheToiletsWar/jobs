@@ -13,7 +13,7 @@ export default async function startCronJob() {
 
   await fetchDataAndUpdateTags();
   // 每小时执行一次
-  cron.schedule('* * * * *', async () => {
+  cron.schedule('* 1 * * *', async () => {
     try {
       // await fetchDataAndUpdateTags();
     } catch (error) {

@@ -7,5 +7,5 @@
   "database": "order_server",
   "synchronize": false,
   "logging": true,
-  "entities": ["src/entities/*.entity{.js,.ts}"]
+  "entities": ["dist/entities/*.entity{.js,.ts}"]
 }
