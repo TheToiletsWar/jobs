@@ -1,10 +1,10 @@
 {
   "type": "mysql",
-  "host": "10.101.243.1",
-  "port": 30029,
+  "host": "10.128.231.60",
+  "port": 30436,
   "username": "root",
   "password": "Zpmc@3261",
-  "database": "order_server",
+  "database": "typeorm_rcmsdb_rmg",
   "synchronize": false,
   "logging": true,
   "entities": ["dist/entities/*.entity{.js,.ts}"]
