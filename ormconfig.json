@@ -1,7 +1,7 @@
 {
   "type": "mysql",
-  "host": "10.128.231.60",
-  "port": 31129,
+  "host": "10.101.243.1",
+  "port": 30029,
   "username": "root",
   "password": "Zpmc@3261",
   "database": "order_server",

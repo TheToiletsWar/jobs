@@ -10,12 +10,11 @@ import { AppDataSource } from '../common';
 
 // 初始化数据源和定时任务
 export default async function startCronJob() {
-
   await fetchDataAndUpdateTags();
-  // 每小时执行一次
-  cron.schedule('* 1 * * *', async () => {
+
+  cron.schedule('*/5 * * * * *', async () => {
     try {
-      // await fetchDataAndUpdateTags();
+      await fetchDataAndUpdateTags();
     } catch (error) {
       Logger.error(`An error occurred during the cron job,${error}`);
     }
@@ -27,25 +26,7 @@ async function fetchDataAndUpdateTags() {
   const workByHourData = (
     await entityManager
       .createQueryBuilder()
-      .select(
-        `
-      CASE
-      WHEN
-      workbyhour.equip_id LIKE 'RTG%' 
-              THEN
-                  equip_id 
-      WHEN 
-      workbyhour.equip_id LIKE 'RT%' 
-              THEN
-                  CONCAT( 'RTG', LPAD( SUBSTR( workbyhour.equip_id, 3 ), 3, '0' ) ) 
-      WHEN 
-      workbyhour.equip_id LIKE 'CR%' 
-              THEN 
-                  CONCAT( 'CR', LPAD( SUBSTR(workbyhour.equip_id, 3 ), 2, '0' ) )  
-      ELSE workbyhour.equip_id   END 
-       `,
-        'equipId',
-      )
+      .select(`workbyhour.equip_id`, 'equipId')
       .addSelect('SUM(workbyhour.nosCount)', 'nosCount')
       .addSelect('SUM(workbyhour.teuCount)', 'teuCount')
       .from(EquipWorkByHourEntity, 'workbyhour')
