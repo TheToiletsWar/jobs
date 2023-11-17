@@ -52,6 +52,12 @@ async function fetchDataAndUpdateTags() {
             value: currDriver.lastName + currDriver.firstName,
             type: `string`,
           });
+        } else {
+          writeData.push({
+            name: tag.name.replace('RCS.Cmsuserid', 'Mem.Cmsusername'),
+            value: '',
+            type: `string`,
+          });
         }
         break;
 
@@ -64,6 +70,15 @@ async function fetchDataAndUpdateTags() {
               'Mem.ConnectCranename',
             ),
             value: currCrane.craneName,
+            type: `string`,
+          });
+        } else {
+          writeData.push({
+            name: tag.name.replace(
+              'RCS.ConnectCraneNo',
+              'Mem.ConnectCranename',
+            ),
+            value: '',
             type: `string`,
           });
         }
