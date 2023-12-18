@@ -7,7 +7,7 @@ import { WorkByHourDto } from '../dto/workbyhour.dto';
 import { WriteTagDto } from '../dto/write.tag.dto';
 import { CraneProductDto } from '../dto/crane.product.dto';
 import { AppDataSource } from '../common';
-
+const regex = /[\u4e00-\u9fa5]|[^\w.]/;
 // 初始化数据源和定时任务
 export default async function startCronJob() {
   await fetchDataAndUpdateTags();
@@ -164,6 +164,10 @@ async function fetchDataAndUpdateTags() {
   // 遍历crMap以获取桥吊（QC）的数据
   for (const [crane, craneProduct] of crMap) {
     const craneName = crane.cranevalue; // 设备名称
+    // 检测craneName是否包含非法字符，如果是，直接跳过此次循环
+    if (craneName === '' || regex.test(craneName)) {
+      continue;
+    }
     const nosTag = `NingBo.${craneName}.Mem.Current.CRNOS`; // NOS点位名称
     const teuTag = `NingBo.${craneName}.Mem.Current.CRTeu`; // TEU点位名称
     const statisticsNosTag = `NingBo.${craneName}.Mem.Statistics.CRNOS`; // 统计值NOS点位名称
@@ -197,6 +201,11 @@ async function fetchDataAndUpdateTags() {
   // 遍历rtgMap以获取龙门吊（RTG）的数据
   for (const [crane, craneProduct] of rtgMap) {
     const craneName = crane.cranevalue; // 设备名称
+    // 检测craneName不为中文如果是非法字符，如中文直接跳过此次循环
+    // 检测craneName是否包含非法字符，如果是，直接跳过此次循环
+    if (regex.test(craneName)) {
+      continue;
+    }
     const nosTag = `NingBo.${craneName}.Mem.Current.RTNOS`; // NOS点位名称
     const teuTag = `NingBo.${craneName}.Mem.Current.RTTeu`; // TEU点位名称
     const statisticsNosTag = `NingBo.${craneName}.Mem.Statistics.RTNOS`; // 统计值NOS点位名称
