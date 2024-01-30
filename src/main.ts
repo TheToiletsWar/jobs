@@ -39,7 +39,7 @@ async function setAxiosBaseUrl() {
   // const config = await configRepository.findOne({});
 
   // if (config && config.restApiIp && config.restApiPort) {
-  axios.defaults.baseURL = `http://10.128.231.60:31080/v1`;
+  axios.defaults.baseURL = "http://10.128.231.60:31082/v1";
   // }
 }
 

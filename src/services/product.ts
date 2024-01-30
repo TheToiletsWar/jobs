@@ -50,7 +50,7 @@ async function fetchDataAndUpdateTags() {
   const crMap = new Map<DevicesListEntity, CraneProductDto>();
   for (const crane of cranes) {
     switch (crane.device_type) {
-      case '桥吊':
+      case '7':
         tagNames.push(
           `NingBo.${crane.cranevalue}.${qcNosPrefix}`,
           `NingBo.${crane.cranevalue}.${qcTeuPrefix}`,
@@ -68,7 +68,7 @@ async function fetchDataAndUpdateTags() {
         }
         break;
 
-      case '龙门吊':
+      case '2':
         tagNames.push(
           `NingBo.${crane.cranevalue}.${rtgNosPrefix}`,
           `NingBo.${crane.cranevalue}.${rtgTeuPrefix}`,
@@ -96,7 +96,7 @@ async function fetchDataAndUpdateTags() {
     const machineryName = splitDot[1];
     const crane = cranes.find((item) => item.cranevalue === machineryName);
     switch (crane?.device_type) {
-      case '桥吊':
+      case '7':
         if (crane) {
           const craneProduct = crMap.get(crane);
           if (craneProduct) {
@@ -109,7 +109,7 @@ async function fetchDataAndUpdateTags() {
         }
 
         break;
-      case '龙门吊':
+      case '2':
         if (crane) {
           const craneProduct = rtgMap.get(crane);
           if (craneProduct) {
@@ -126,9 +126,10 @@ async function fetchDataAndUpdateTags() {
   // 统计值
   for (const productInfo of workByHourData) {
     const machineryName = productInfo.equipId;
+    // console.log('machineryName :>> ', machineryName);
     const crane = cranes.find((item) => item.cranevalue === machineryName);
     switch (crane?.device_type) {
-      case '桥吊':
+      case '7':
         if (crane) {
           const craneProduct = crMap.get(crane);
           if (craneProduct) {
@@ -142,7 +143,7 @@ async function fetchDataAndUpdateTags() {
         }
 
         break;
-      case '龙门吊':
+      case '2':
         if (crane) {
           const craneProduct = rtgMap.get(crane);
           if (craneProduct) {
